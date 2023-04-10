@@ -5,8 +5,6 @@ import dtos.Request.RegisterRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Objects;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceImplTest {
@@ -54,5 +52,11 @@ class UserServiceImplTest {
 
         assertEquals(user.getEmailAddress(), userService.findUser(1).getEmailAddress());
 
+    }
+    @Test
+    public void checkIfUserCanLogin(){
+        user = userService.registerUser(registerRequest);
+
+        assertTrue(userService.isLogin(registerRequest.getEmailAddress(), "passWord"));
     }
 }

@@ -10,16 +10,18 @@ import dtos.Request.ComposeRequest;
 import dtos.Request.RegisterRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.MailMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MailServiceImplTest {
 
-    private MailRepository mailRepository;
+    private static MailRepository mailRepository;
     private  UserRepository userRepository;
     private User user;
     private UserService userService;
-    private  Mail mail;
+    private  static Mail mail;
+    private static Mail mail2;
     MailService mailService;
     @BeforeEach
     void setUp() {
@@ -55,7 +57,6 @@ class MailServiceImplTest {
         ComposeRequest composeRequest= new ComposeRequest();
         composeRequest.setSubject("title");
         composeRequest.setBody("body");
-        composeRequest.setId(1);
         mail.setBody(composeRequest.getBody());
         mail.setId(composeRequest.getId());
         mail.setSubject(composeRequest.getSubject());
@@ -63,9 +64,45 @@ class MailServiceImplTest {
         System.out.println(mailService.saveEmail(composeRequest) + " " + " I'm here");
         //System.out.println(userService.findUser("firstNamelastName@gmail.com"));
         System.out.println(mailService.findMail("title"));
-        mailService.sendMail("firstNamelastName@gmail.com", composeRequest);
+        mailService.sendMail("firstNamelastName@gmail.com", "firstNamelastName@gmail.com", composeRequest);
         System.out.println(composeRequest);
 
        assertEquals("title" ,mailService.findMail("title").getSubject());
+
+
+    }
+
+    @Test
+    public void checkAllMail(){
+        ComposeRequest composeRequest = new ComposeRequest();
+        composeRequest.setSubject("subject");
+        composeRequest.setBody("body");
+        mailService.saveEmail(composeRequest);
+        mailRepository.saveMail(mail);
+        ComposeRequest composeRequest1 = new ComposeRequest();
+        composeRequest1.setSubject("title");
+        composeRequest1.setBody("main");
+        mailService.saveEmail(composeRequest1);
+         mail2 = new Mail();
+        mail2.setBody(composeRequest1.getBody());
+        mail2.setSubject(composeRequest1.getSubject());
+        mailRepository.saveMail(mail2);
+        System.out.println(mail2.getId());
+
+
+        System.out.println(mailService.findAllMails());
+        assertEquals("title", mailService.findMail("title").getSubject());
+        assertEquals(2,mailRepository.count());
+    }
+
+    @Test
+    public void mailCanBeDeleted(){
+        ComposeRequest composeRequest = new ComposeRequest();
+        composeRequest.setSubject("subject");
+        composeRequest.setBody("body");
+        mailService.saveEmail(composeRequest);
+        MailMapper.map(composeRequest, mail);
+        System.out.println(mailService.deleteMail(1));
+        assertEquals(0, mailRepository.count());
     }
 }

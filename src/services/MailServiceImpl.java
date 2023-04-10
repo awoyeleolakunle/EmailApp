@@ -2,40 +2,49 @@ package services;
 
 import data.model.Mail;
 import data.model.User;
-import data.repositories.*;
+import data.repositories.MailRepository;
+import data.repositories.MailRepositoryImpl;
+import data.repositories.UserRepository;
+import data.repositories.UserRepositoryImpl;
 import dtos.Request.ComposeRequest;
 import dtos.Request.RegisterRequest;
+import dtos.Response.FindMailResponse;
 import utils.MailMapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MailServiceImpl implements MailService {
 
     private static MailRepository mailRepository = new MailRepositoryImpl();
     private User user = new User();
-    private static RegisterRequest  registerRequest = new RegisterRequest();
+    private static RegisterRequest registerRequest = new RegisterRequest();
     private static UserRepository userRepository = new UserRepositoryImpl();
     private static Mail mail;
     private static UserService userService = new UserServiceImpl();
     private ComposeRequest composeRequest = new ComposeRequest();
 
+
+
     @Override
-    public Mail sendMail(String emailAddress, ComposeRequest composeRequest) {
+    public FindMailResponse sendMail(String senderEmailAddress, String emailAddress, ComposeRequest composeRequest) {
         if (userService.findUser(emailAddress).getEmailAddress().equals(emailAddress)) {
+            FindMailResponse response = new FindMailResponse();
             mail = new Mail();
             MailMapper.map(composeRequest, mail);
-            return mailRepository.saveMail(mail);
-        }
-            return null;
+            mailRepository.saveMail(mail);
+            userService.userInboxMail(emailAddress, mail);
+            userService.userOutBoxMail(senderEmailAddress, mail);
+            response.setId(mail.getId());
+            response.setSubject(mail.getSubject());
+            response.setBody(mail.getBody());
+            response.setDateTime(mail.getDateTime());
 
-    }
+            return response;
 
-    @Override
-    public Mail sendMail(int id, ComposeRequest composeRequest) {
-        if (userService.findUser(id).getId() == id) {
-            mail = new Mail();
-            MailMapper.map(composeRequest, mail);
-            return mailRepository.saveMail(mail);
         }
         return null;
+
     }
 
     @Override
@@ -44,12 +53,17 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public Mail findMail(String subject) {
+    public FindMailResponse findMail(String subject) {
+        System.out.println(mailRepository.findMailBySubject(subject) + "I'm the found mail");
         if (mailRepository.findMailBySubject(subject).getSubject().equals(subject)) {
-
-            Mail savedMail = mailRepository.findMailBySubject(subject);
-            System.out.println(savedMail.toString());
-            return savedMail;
+            mail = mailRepository.findMailBySubject(subject);
+            FindMailResponse response = new FindMailResponse();
+            response.setId(mail.getId());
+            response.setSubject(mail.getSubject());
+            response.setBody(mail.getBody());
+            response.setDateTime(mail.getDateTime());
+            System.out.println(response);
+            return response;
         }
         return null ;
     }
@@ -60,14 +74,31 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public void deleteMail(int id) {
+    public String deleteMail(int id){
+        if (!(mailRepository.findById(id).getId() ==id)) throw new IndexOutOfBoundsException("Mail not found");
 
+        mailRepository.deleteMail(id);
+    return "Email deleted successfully";
     }
 
     @Override
-    public Mail saveEmail(ComposeRequest composeRequest) {
-        Mail mail = new Mail();
+    public FindMailResponse saveEmail(ComposeRequest composeRequest) {
+          mail = new Mail();
         MailMapper.map(composeRequest,mail);
-        return mailRepository.saveMail(mail);
+        mailRepository.saveMail(mail);
+        FindMailResponse response = new FindMailResponse();
+        response.setSubject(mail.getSubject());
+        response.setBody(mail.getBody());
+        response.setId(mail.getId());
+        response.setDateTime(mail.getDateTime());
+        return response;
     }
+
+    @Override
+    public List<Mail> findAllMails() {
+        return mailRepository.findAllMail();
+    }
+
+
+
 }

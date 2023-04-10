@@ -8,7 +8,8 @@ import java.util.List;
 public class MailRepositoryImpl implements MailRepository{
 
     private int count;
-    private List<Mail>mails = new ArrayList<>();
+
+    private  List<Mail>mails = new ArrayList<>();
     @Override
     public Mail saveMail(Mail mail) {
         boolean hasNotBeencreated = mail.getId()==0;
@@ -25,18 +26,18 @@ public class MailRepositoryImpl implements MailRepository{
 
     @Override
     public Mail findMailBySubject(String mailSubject) {
-        for (Mail mail: mails) {
-            if(mail.getSubject().equals(mailSubject)) {
-                System.out.println(mail);
-                return mail;
-            }
-            break;
-        }return null;
-    }
+        System.out.println(mails.size() + " na here be the koko");
+        for (Mail mail : mails) {
+            System.out.println(mails.size() + " na my size be this");
+            if (mail.getSubject().equals(mailSubject))
+                return mail;}
+            System.out.println(" nothing dey here");
+            return null;
 
+    }
     @Override
     public void deleteMailBySubject(String mailSubject) {
-        for (Mail mail: mails) {
+        for ( Mail mail: mails) {
             if(mail.getSubject().equals(mailSubject)){
                 mails.remove(mail);
                 count--;
@@ -67,11 +68,17 @@ public class MailRepositoryImpl implements MailRepository{
     }
 
     @Override
-    public Mail findById(int Id) {
-        for (Mail mail: mails){
-            if(mail.getId()==Id){
-                return mail;
-            }
-        } return null;
+    public Mail findById(int id) {
+        return mails.get(id-1);
+    }
+
+    @Override
+    public List<Mail> findAllMail() {
+        return mails;
+    }
+
+    @Override
+    public int totalNumberOfMail() {
+        return mails.size();
     }
 }

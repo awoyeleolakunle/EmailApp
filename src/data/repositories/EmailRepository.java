@@ -2,8 +2,6 @@ package data.repositories;
 
 import data.model.Email;
 
-import java.util.List;
-
 public interface EmailRepository {
 
     Email saveEmailAccount(Email mailAccount);

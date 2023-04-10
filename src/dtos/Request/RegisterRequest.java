@@ -2,7 +2,7 @@ package dtos.Request;
 
 public class RegisterRequest {
     private String firstName;
-    private String LastName;
+    private String lastName;
     private String password;
     private String emailAddress;
     private int id;
@@ -16,11 +16,11 @@ public class RegisterRequest {
     }
 
     public String getLastName() {
-        return LastName;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
-        LastName = lastName;
+        this.lastName = lastName;
     }
 
     public String getPassword() {
@@ -49,7 +49,7 @@ public class RegisterRequest {
     public String toString() {
         return "RegisterRequest{" +
                 "firstName='" + firstName + '\'' +
-                ", LastName='" + LastName + '\'' +
+                ", LastName='" + lastName + '\'' +
                 ", password='" + password + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +
                 ", id=" + id +

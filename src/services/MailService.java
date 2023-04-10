@@ -2,17 +2,24 @@ package services;
 
 import data.model.Mail;
 import dtos.Request.ComposeRequest;
+import dtos.Response.FindMailResponse;
+
+import java.util.List;
 
 public interface MailService {
 
-    Mail sendMail(String emailAddress, ComposeRequest composeRequest);
+        FindMailResponse sendMail( String senderEmailAddress, String emailAddress, ComposeRequest composeRequest);
 
-    Mail sendMail(int id, ComposeRequest composeRequest);
+//    Mail sendMail(int id, ComposeRequest composeRequest);
 
-    Mail findMail(int id);
-    Mail findMail(String Title);
+   Mail findMail(int id);
+    FindMailResponse findMail(String Title);
     void receiveMail();
-    void deleteMail(int id);
+    String deleteMail(int id);
 
-    Mail saveEmail(ComposeRequest composeRequest);
+    FindMailResponse saveEmail(ComposeRequest composeRequest);
+
+    List<Mail> findAllMails();
+
+
 }

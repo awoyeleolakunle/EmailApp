@@ -1,17 +1,19 @@
 package data.repositories;
 
-import data.model.Email;
+import data.model.Mail;
 import data.model.User;
 import dtos.Request.RegisterRequest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class UserRepositoryImpl implements UserRepository{
 
     private int count;
     private List<User>users = new ArrayList<>();
+
+    private List<Mail> mails = new ArrayList<>();
+
 RegisterRequest registerRequest= new RegisterRequest();
 
     @Override
@@ -65,6 +67,21 @@ RegisterRequest registerRequest= new RegisterRequest();
         count = users.size();
 
     }
+
+    @Override
+    public void addToInbox( String emailAddress, Mail mail) {
+        for (User user: users) {
+            if(user.getEmailAddress().equals(emailAddress))
+                user.setMail(mail);
+        }
+
+    }
+
+    @Override
+    public void addToOutBox(String emailAddress, Mail mail) {
+
+    }
+
 
     @Override
     public int count() {

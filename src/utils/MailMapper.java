@@ -8,7 +8,6 @@ public class MailMapper {
         Mail mail = new Mail();
         mail.setSubject(composeRequest.getSubject());
         mail.setBody(composeRequest.getBody());
-        mail.setId(composeRequest.getId());
         mail.setDateTime(composeRequest.getDateTime());
         return mail;
 
@@ -17,7 +16,6 @@ public class MailMapper {
     public static void map(ComposeRequest composeRequest, Mail mail){
         mail.setSubject(composeRequest.getSubject());
         mail.setBody(composeRequest.getBody());
-        mail.setId(composeRequest.getId());
         mail.setDateTime(composeRequest.getDateTime());
     }
 }
